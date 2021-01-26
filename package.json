@@ -1,0 +1,32 @@
+{
+  "name": "use-gmaps",
+  "version": "1.0.0",
+  "description": "React hook to use Google Maps in your React apps",
+  "main": "index.js",
+  "module": "index.js",
+  "scripts": {
+    "setup:test": "npx create-react-app test-app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "google",
+    "maps",
+    "API",
+    "react",
+    "hook"
+  ],
+  "author": {
+    "name": "Jabran Rafique",
+    "email": "hello@jabran.me"
+  },
+  "license": "MIT",
+  "prettier": "@jabranr-lab/prettier",
+  "devDependencies": {
+    "@jabranr-lab/prettier": "^1.2.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  },
+  "dependencies": {
+    "@googlemaps/js-api-loader": "^1.11.1"
+  }
+}
