@@ -10,25 +10,14 @@ export default function useGoogleMaps({ apiKey, mapOptions, ...options }) {
     {
       gmap: {},
       isLoaded: false,
-      currentLocation: { lat: 35.82, lng: 76.5 }
+      currentCenter: { lat: 35.82, lng: 76.5 }
     }
   );
 
   const setupGoogleMaps = () => {
     const gmap = new window.google.maps.Map(mapRef.current, {
-      center: state.currentLocation,
+      center: state.currentCenter,
       zoom: 10,
-      styles: [
-        {
-          featureType: 'poi',
-          stylers: [{ visibility: 'off' }]
-        },
-        {
-          featureType: 'transit.station',
-          stylers: [{ visibility: 'off' }]
-        }
-      ],
-      streetViewControl: false,
       ...mapOptions
     });
 
@@ -41,7 +30,7 @@ export default function useGoogleMaps({ apiKey, mapOptions, ...options }) {
         dispatch({
           gmap,
           isLoaded: true,
-          currentLocation: gmap.getCenter().toJSON()
+          currentCenter: gmap.getCenter().toJSON()
         });
       });
     }
@@ -73,6 +62,6 @@ export default function useGoogleMaps({ apiKey, mapOptions, ...options }) {
     map: state.gmap,
     isMapLoaded: state.isLoaded,
     errors: state.errors,
-    currentLocation: state.currentLocation
+    currentCenter: state.currentCenter
   };
 }

@@ -5,8 +5,8 @@
   "main": "index.js",
   "module": "index.js",
   "scripts": {
-    "setup:test": "npx create-react-app test-app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "setup": "sh setup-test-app.sh",
+    "start": "cd test-app && ./node_modules/.bin/react-scripts start"
   },
   "keywords": [
     "google",
