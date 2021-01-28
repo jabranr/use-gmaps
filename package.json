@@ -8,6 +8,14 @@
     "setup": "sh setup-test-app.sh",
     "start": "cd test-app && ./node_modules/.bin/react-scripts start"
   },
+  "bugs": {
+    "url": "https://github.com/jabranr/use-gmaps/issues"
+  },
+  "homepage": "https://github.com/jabranr/use-gmaps#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jabranr/use-gmaps.git"
+  },
   "keywords": [
     "google",
     "maps",
