@@ -23,10 +23,10 @@
   "prettier": "@jabranr-lab/prettier",
   "devDependencies": {
     "@jabranr-lab/prettier": "^1.2.1",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1"
+    "react": ">17",
+    "react-dom": ">17"
   },
   "dependencies": {
-    "@googlemaps/js-api-loader": "^1.11.1"
+    "@googlemaps/js-api-loader": "^1.15.1"
   }
 }
