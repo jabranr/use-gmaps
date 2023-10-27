@@ -4,6 +4,7 @@
   "description": "React hook to use Google Maps in your React apps",
   "main": "index.js",
   "module": "index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "setup": "sh setup-test-app.sh",
     "start": "cd test-app && ./node_modules/.bin/react-scripts start"
@@ -23,6 +24,7 @@
   "prettier": "@jabranr-lab/prettier",
   "devDependencies": {
     "@jabranr-lab/prettier": "^1.2.1",
+    "@types/google.maps": "^3.54.5",
     "react": ">17",
     "react-dom": ">17"
   },

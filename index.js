@@ -15,13 +15,13 @@ export default function useGoogleMaps({ apiKey, mapOptions, ...options }) {
   );
 
   const setupGoogleMaps = () => {
-    const gmap = new window.google.maps.Map(mapRef.current, {
-      center: state.currentCenter,
-      zoom: 10,
-      ...mapOptions
-    });
-
     if (typeof window !== 'undefined') {
+      const gmap = new window.google.maps.Map(mapRef.current, {
+        center: state.currentCenter,
+        zoom: 10,
+        ...mapOptions
+      });
+
       window.google.maps.event.addListenerOnce(gmap, 'tilesloaded', () => {
         dispatch({ gmap, isLoaded: true });
       });
