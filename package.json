@@ -14,7 +14,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "setup": "sh setup-test-app.sh",
     "start": "cd test-app && ./node_modules/.bin/vite",
-    "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview --port 3030",
+    "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview",
     "prepare": "husky"
   },
   "homepage": "https://www.github.com/jabranr/create-npm-package",

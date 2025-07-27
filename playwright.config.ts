@@ -28,7 +28,7 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"], ...devices["Nexus 5X"] },
+      use: { ...devices["Desktop Chrome"] },
     },
 
     // {
@@ -44,7 +44,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "npm run setup && npm run preview",
+    command: "npm run setup && npm run preview -- --port 3030",
     url: "http://localhost:3030",
     reuseExistingServer: !process.env.CI,
   },
