@@ -32,6 +32,11 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm ci
       - run: npm run build
+      - run: |
+          VERSION_TYPE=$(git log -1 --pretty=%B | grep -oE '\[major\]|\[minor\]|\[patch\]' | head -1 | tr -d '[]')
+          if [ -n "$VERSION_TYPE" ]; then
+            npm version $VERSION_TYPE
+          fi
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
