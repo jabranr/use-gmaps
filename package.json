@@ -14,7 +14,8 @@
     "lint": "eslint . --ext .ts,.tsx",
     "setup": "sh setup-test-app.sh",
     "start": "cd test-app && ./node_modules/.bin/vite",
-    "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview --port 3030"
+    "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview --port 3030",
+    "prepare": "husky"
   },
   "homepage": "https://www.github.com/jabranr/create-npm-package",
   "keywords": [
@@ -68,6 +69,7 @@
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^9.32.0",
     "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.2",
     "react": ">17",

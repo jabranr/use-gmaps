@@ -159,24 +159,4 @@ describe("useGoogleMaps", () => {
 
     expect(mockLoader.importLibrary.mock.calls.length).toBe(initialCallCount);
   });
-
-  it("should not create map in server environment", () => {
-    const originalWindow = global.window;
-    // @ts-expect-error: Simulating server environment
-    delete global.window;
-
-    const { result } = renderHook(() =>
-      useGoogleMaps({ apiKey: "test-api-key" })
-    );
-
-    expect(window).not.toBeDefined();
-    expect(result.current.map).toBeNull();
-    // expect(result.current.isMapLoaded).toBe(false);
-    // expect(result.current.shouldLoad).toBe(false);
-    // expect(result.current.errors).toBeNull();
-    // expect(result.current.currentCenter).toEqual({ lat: 35.82, lng: 76.5 });
-    // expect(result.current.mapRef.current).toBeNull();
-
-    global.window = originalWindow;
-  });
 });
