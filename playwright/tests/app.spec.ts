@@ -12,9 +12,7 @@ test.describe("Google Maps Hook Test App", () => {
     await expect(page).toHaveTitle(/Vite \+ React \+ TS/);
 
     // Verify that the main div container is present
-    const mapContainer = page.locator(
-      'div[style*="width: 100vw"][style*="height: 100vh"]'
-    );
+    const mapContainer = page.getByTestId("jabraf-test-map-container");
     await expect(mapContainer).toBeVisible();
 
     // Check that the page doesn't have any console errors

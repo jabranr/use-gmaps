@@ -4,10 +4,9 @@
 npm run build
 npm pack
 
-# if test-app directory does not exist, create it with a vite app in it
-if [ ! -d "test-app" ]; then
-  npm create vite@latest test-app -- --template=react-ts
-fi
+# create a fresh vite app
+rm -rf test-app
+npm create vite@latest test-app -- --template=react-ts
 
 # move the packaged version of use-gmaps to the test-app directory
 mv jabraf-use-gmaps*.tgz test-app/
@@ -25,7 +24,7 @@ import useGoogleMaps from '../../src/index';
 
 export default function App() {
   const { mapRef } = useGoogleMaps({ apiKey: '' });
-  return <div data-testid="jabraf-test-map-container" ref={mapRef} style={{ width: '100vw', height: '100vh' }} />;
+  return <div data-testid='jabraf-test-map-container' ref={mapRef} style={{ width: '100vw', height: '100vh' }} />;
 }
 
 " > src/App.tsx
