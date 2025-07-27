@@ -1,32 +1,36 @@
 #!/usr/bin/env bash
 
-
-npx create-react-app test-app --template=typescript
-
-# mkdir -p test-app/src test-app/public
-
+# build and package the use-gmaps library
+npm run build
 npm pack
-mv use-gmaps*.tgz test-app/
 
+# if test-app directory does not exist, create it with a vite app in it
+if [ ! -d "test-app" ]; then
+  npm create vite@latest test-app -- --template=react-ts
+fi
+
+# move the packaged version of use-gmaps to the test-app directory
+mv jabraf-use-gmaps*.tgz test-app/
 cd test-app
 
-# remove unused files
-rm src/App.css src/App.test.tsx src/logo.svg
-
 # install packaged version of use-gmaps
-npm i ./use-gmaps*.tgz
-rm ./use-gmaps*.tgz
+npm i ./jabraf-use-gmaps*.tgz
 
-# setup app.tsx with use-gmaps
+# remove packaged version of use-gmaps
+rm ./jabraf-use-gmaps*.tgz
+
+# setup app.tsx with @jabraf/use-gmaps
 echo "
-import useGoogleMaps from 'use-gmaps';
+import useGoogleMaps from '../../src/index';
 
 export default function App() {
-  const { mapRef } = useGoogleMaps({ apiKey: 'ABC-XYZ' });
-  return <div ref={mapRef} style={{ width: '100vw', height: '100vh' }} />;
+  const { mapRef } = useGoogleMaps({ apiKey: '' });
+  return <div data-testid="jabraf-test-map-container" ref={mapRef} style={{ width: '100vw', height: '100vh' }} />;
 }
 
 " > src/App.tsx
+
+npm install
 
 echo "**************************************";
 echo " ";

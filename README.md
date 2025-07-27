@@ -1,4 +1,4 @@
-# use-gmaps
+# @jabraf/use-gmaps
 
 React hook to use Google Maps in your React apps
 
@@ -7,13 +7,13 @@ React hook to use Google Maps in your React apps
 Install with `npm`
 
 ```
-npm install use-gmaps
+npm install @jabraf/use-gmaps
 ```
 
 Install with `yarn`
 
 ```
-yarn add use-gmaps
+yarn add @jabraf/use-gmaps
 ```
 
 This custom hook uses `@googlemaps/js-api-loader` to setup the map. More info at https://github.com/googlemaps/js-api-loader
@@ -26,7 +26,7 @@ Use the custom hook in your React app:
 
 ```js
 import React from 'react';
-import useGoogleMaps from 'use-gmaps';
+import useGoogleMaps from '@jabraf/use-gmaps';
 
 export default function App() {
   const { mapRef } = useGoogleMaps({ apiKey: 'ABC-XYZ' });
@@ -41,7 +41,7 @@ Another example to add a marker:
 
 ```js
 import React from 'react';
-import useGoogleMaps from 'use-gmaps';
+import useGoogleMaps from '@jabraf/use-gmaps';
 
 const { mapRef, map, isMapLoaded, currentCenter } = useGoogleMaps({
   apiKey: 'ABC-XYZ'
