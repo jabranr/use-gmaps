@@ -53,6 +53,9 @@
     "npm": "10.9.2"
   },
   "prettier": "@jabraf/prettier",
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  },
   "devDependencies": {
     "@jabraf/prettier": "^3.0.1",
     "@playwright/test": "^1.54.1",
