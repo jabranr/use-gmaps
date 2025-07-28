@@ -1,4 +1,4 @@
-name: Publish to npm
+name: Test and pre-release to npm
 
 on:
   pull_request:

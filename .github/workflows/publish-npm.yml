@@ -37,6 +37,8 @@ jobs:
       - run: |
           VERSION_TYPE=$(git log -1 --pretty=%B | grep -oE '\[major\]|\[minor\]|\[patch\]' | head -1 | tr -d '[]')
           if [ -n "$VERSION_TYPE" ]; then
+            git config --global user.user "Jabran Rafique"
+            git config --global user.email "2131246+jabranr@users.noreply.github.com"
             npm version $VERSION_TYPE
           fi
         env:
