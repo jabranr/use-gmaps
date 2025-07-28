@@ -1,6 +1,6 @@
 {
   "name": "@jabraf/use-gmaps",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "React hook for using Google Maps in React apps.",
   "types": "dist/index.d.ts",
   "scripts": {
