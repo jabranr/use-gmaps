@@ -18,7 +18,7 @@ jobs:
       - run: npm ci
       - run: |
           echo "Checking for version update in PR title or commits..."
-          git log --pretty=format:%s | grep -E '\[major\]|\[minor\]|\[patch\]
+          git log --pretty=format:%s | grep -E '\[major\]|\[minor\]|\[patch\]'
       - run: |
           if ! git log --pretty=format:%s | grep -qE '\[major\]|\[minor\]|\[patch\]'; then
             echo "No version update found in PR title or commits."
