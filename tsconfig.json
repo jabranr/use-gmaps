@@ -22,6 +22,9 @@
     "rootDir": "src",
     "sourceMap": true,
 
+    /* If not transpiling with TypeScript: */
+    "noEmit": true,
+
     /* AND if you're building for a library: */
     "declaration": true,
 

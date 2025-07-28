@@ -20,7 +20,7 @@ rm ./jabraf-use-gmaps*.tgz
 
 # setup app.tsx with @jabraf/use-gmaps
 echo "
-import useGoogleMaps from '../../src/index';
+import useGoogleMaps from '@jabraf/use-gmaps';
 
 export default function App() {
   const { mapRef } = useGoogleMaps({ apiKey: '' });

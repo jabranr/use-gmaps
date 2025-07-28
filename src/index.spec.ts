@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { renderHook, waitFor } from "@testing-library/react";
-import useGoogleMaps from "./index.js";
-import type { Libraries } from "@googlemaps/js-api-loader";
+import useGoogleMaps from "./index";
 
 // Mock Google Maps API
 const mockMap = {

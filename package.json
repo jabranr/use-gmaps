@@ -4,14 +4,13 @@
   "description": "React hook for using Google Maps in React apps.",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:headed": "playwright test --headed",
-    "lint": "eslint . --ext .ts,.tsx",
     "setup": "sh setup-test-app.sh",
     "start": "cd test-app && ./node_modules/.bin/vite",
     "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview",
@@ -40,12 +39,12 @@
     "access": "public"
   },
   "type": "module",
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.es.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "license": "MIT",
@@ -67,21 +66,21 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.7.0",
-    "eslint": "^9.32.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.2",
     "react": ">17",
     "react-dom": ">17",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.16.10"
-  },
-  "eslintConfig": {
-    "extends": "plugin:react-hooks/recommended"
   },
   "lint-staged": {
     "*": [
