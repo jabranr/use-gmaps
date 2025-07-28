@@ -1,14 +1,23 @@
 {
-  "name": "use-gmaps",
-  "version": "1.2.1",
-  "description": "React hook to use Google Maps in your React apps",
-  "main": "index.js",
-  "module": "index.js",
-  "types": "./index.d.ts",
+  "name": "@jabraf/use-gmaps",
+  "version": "1.0.1",
+  "description": "React hook for using Google Maps in React apps.",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "lint": "eslint . --ext .ts,.tsx",
     "setup": "sh setup-test-app.sh",
-    "start": "cd test-app && ./node_modules/.bin/react-scripts start"
+    "start": "cd test-app && ./node_modules/.bin/vite",
+    "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview",
+    "prepare": "husky"
   },
+  "homepage": "https://www.github.com/jabranr/create-npm-package",
   "keywords": [
     "google",
     "maps",
@@ -20,15 +29,65 @@
     "name": "Jabran Rafique",
     "email": "hello@jabran.me"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jabranr/create-npm-package.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
+    }
+  },
   "license": "MIT",
-  "prettier": "@jabranr-lab/prettier",
+  "volta": {
+    "node": "22.17.0",
+    "npm": "10.9.2"
+  },
+  "prettier": "@jabraf/prettier",
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
+  },
   "devDependencies": {
-    "@jabranr-lab/prettier": "^1.2.1",
-    "@types/google.maps": "^3.54.5",
+    "@jabraf/prettier": "^3.0.1",
+    "@playwright/test": "^1.54.1",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/google.maps": "*",
+    "@types/jsdom": "^21.1.7",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.32.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "jsdom": "^26.1.0",
+    "lint-staged": "^16.1.2",
     "react": ">17",
-    "react-dom": ">17"
+    "react-dom": ">17",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   },
   "dependencies": {
-    "@googlemaps/js-api-loader": "^1.15.1"
+    "@googlemaps/js-api-loader": "^1.16.10"
+  },
+  "eslintConfig": {
+    "extends": "plugin:react-hooks/recommended"
+  },
+  "lint-staged": {
+    "*": [
+      "npm run test",
+      "prettier --check",
+      "npm run lint"
+    ]
   }
 }
