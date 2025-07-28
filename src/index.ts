@@ -15,14 +15,14 @@ type UseGoogleMaps = LoaderOptions & {
 
 type GoogleMaps = {
   mapRef: RefObject<HTMLDivElement | null>;
-  map: google.maps.Map | null;
+  map: google.maps.Map;
   isMapLoaded: boolean;
   errors: unknown | null;
   currentCenter: google.maps.LatLngLiteral;
 };
 
 type GoogleMapsState = {
-  gmap: google.maps.Map | null;
+  gmap: google.maps.Map;
   isLoaded: boolean;
   currentCenter: google.maps.LatLngLiteral;
   errors: unknown | null;
@@ -36,7 +36,7 @@ function reducer(
 }
 
 const initialState: GoogleMapsState = {
-  gmap: null,
+  gmap: {} as google.maps.Map,
   isLoaded: false,
   currentCenter: { lat: 35.82, lng: 76.5 },
   errors: null,

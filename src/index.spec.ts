@@ -50,7 +50,7 @@ describe("useGoogleMaps", () => {
       useGoogleMaps({ apiKey: "test-api-key" })
     );
 
-    expect(result.current.map).toBeNull();
+    expect(result.current.map).toEqual({});
     expect(result.current.isMapLoaded).toBe(false);
     expect(result.current.errors).toBeNull();
     expect(result.current.currentCenter).toEqual({ lat: 35.82, lng: 76.5 });
