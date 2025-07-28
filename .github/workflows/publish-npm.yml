@@ -39,6 +39,8 @@ jobs:
           if [ -n "$VERSION_TYPE" ]; then
             npm version $VERSION_TYPE
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
