@@ -15,15 +15,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm ci
+      # - run: npm ci
       - run: |
           echo "Checking for version update in PR title or commits..."
           git log --pretty=format:%s | grep -E '\[major\]|\[minor\]|\[patch\]'
-      - run: |
-          if ! git log --pretty=format:%s | grep -qE '\[major\]|\[minor\]|\[patch\]'; then
-            echo "No version update found in PR title or commits."
-            exit 1
-          fi
+      # - run: |
+      #     if ! git log --pretty=format:%s | grep -qE '\[major\]|\[minor\]|\[patch\]'; then
+      #       echo "No version update found in PR title or commits."
+      #       exit 1
+      #     fi
   unit:
     needs: verify_pr
     runs-on: ubuntu-latest
