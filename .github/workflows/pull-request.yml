@@ -8,24 +8,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify_pr:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-      # - run: npm ci
-      - run: |
-          echo "Checking for version update in PR title or commits..."
-          git log --pretty=format:%s | grep -qE '\[major\]|\[minor\]|\[patch\]'
-      # - run: |
-      #     if ! git log --pretty=format:%s | grep -qE '\[major\]|\[minor\]|\[patch\]'; then
-      #       echo "No version update found in PR title or commits."
-      #       exit 1
-      #     fi
   unit:
-    needs: verify_pr
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -37,7 +20,6 @@ jobs:
       - run: npm test
 
   e2e:
-    needs: [verify_pr, unit]
     timeout-minutes: 60
     runs-on: ubuntu-latest
     strategy:
@@ -64,7 +46,7 @@ jobs:
           retention-days: 30
 
   pre-publish:
-    needs: [verify_pr, unit, e2e]
+    needs: [unit, e2e]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
