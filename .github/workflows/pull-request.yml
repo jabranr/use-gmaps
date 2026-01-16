@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.17.0
-          cache: "npm"
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - run: npm test
@@ -28,7 +28,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.17.0
-          cache: "npm"
+          cache: 'npm'
       - run: npm ci
       - run: npm run build
       - name: Install Chromium browser
@@ -56,6 +56,6 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm version prerelease --preid="rc-${{steps.get_commit_sha.outputs.sha_short}}" --no-git-tag-version
-      - run: npm publish
+      - run: npm publish --tag=rc
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
