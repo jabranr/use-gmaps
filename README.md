@@ -16,7 +16,7 @@ Install with `yarn`
 yarn add @jabraf/use-gmaps
 ```
 
-This custom hook uses `@googlemaps/js-api-loader` to setup the map. More info at https://github.com/googlemaps/js-api-loader
+This custom hook uses `@googlemaps/js-api-loader` to set up the map. More info at https://github.com/googlemaps/js-api-loader
 
 ## Usage
 
@@ -35,7 +35,7 @@ export default function App() {
 }
 ```
 
-> If you are using Create React App (CRA) then you can also pass the key from environment variables (e.g. process.env.REACT_APP_GMAPS_API_KEY)
+> You can also pass the key from environment variables, e.g. `import.meta.env.VITE_GMAPS_API_KEY` with Vite or `process.env.REACT_APP_GMAPS_API_KEY` with Create React App (CRA).
 
 Another example to add a marker:
 
