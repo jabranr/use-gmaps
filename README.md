@@ -139,13 +139,17 @@ The value will update with map drag.
 
 ## Development
 
-Run following commands to setup and start the test project using Create React App.
+Run the following commands to set up and start the test project, a Vite + React app that installs the locally built package.
 
 ```sh
 npm install
 npm run setup
 npm start
 ```
+
+## Releasing
+
+Merges to `main` are published to npm automatically with [trusted publishing](https://docs.npmjs.com/trusted-publishers). The version is bumped from [Conventional Commits](https://www.conventionalcommits.org/). To publish a pre-release from a pull request under the `rc` tag, include `[publish]` in the PR's latest commit message.
 
 ## Demo
 
