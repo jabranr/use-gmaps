@@ -16,7 +16,7 @@ Install with `yarn`
 yarn add @jabraf/use-gmaps
 ```
 
-This custom hook uses `@googlemaps/js-api-loader` to setup the map. More info at https://github.com/googlemaps/js-api-loader
+This custom hook uses `@googlemaps/js-api-loader` to set up the map. More info at https://github.com/googlemaps/js-api-loader
 
 ## Usage
 
@@ -35,7 +35,7 @@ export default function App() {
 }
 ```
 
-> If you are using Create React App (CRA) then you can also pass the key from environment variables (e.g. process.env.REACT_APP_GMAPS_API_KEY)
+> You can also pass the key from environment variables, e.g. `import.meta.env.VITE_GMAPS_API_KEY` with Vite or `process.env.REACT_APP_GMAPS_API_KEY` with Create React App (CRA).
 
 Another example to add a marker:
 
@@ -139,13 +139,17 @@ The value will update with map drag.
 
 ## Development
 
-Run following commands to setup and start the test project using Create React App.
+Run the following commands to set up and start the test project, a Vite + React app that installs the locally built package.
 
 ```sh
 npm install
 npm run setup
 npm start
 ```
+
+## Releasing
+
+Merges to `main` are published to npm automatically with [trusted publishing](https://docs.npmjs.com/trusted-publishers). The version is bumped from [Conventional Commits](https://www.conventionalcommits.org/). To publish a pre-release from a pull request under the `rc` tag, include `[publish]` in the PR's latest commit message.
 
 ## Demo
 
