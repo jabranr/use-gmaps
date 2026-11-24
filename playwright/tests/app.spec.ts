@@ -9,7 +9,8 @@ test.describe("Google Maps Hook Test App", () => {
     await page.waitForLoadState("networkidle");
 
     // Check that the page title is present
-    await expect(page).toHaveTitle(/Vite \+ React \+ TS/);
+    // create-vite titles the page after the project name ('test-app' in setup-test-app.sh)
+    await expect(page).toHaveTitle(/test-app/);
 
     // Verify that the main div container is present
     const mapContainer = page.getByTestId("jabraf-test-map-container");
