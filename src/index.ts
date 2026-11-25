@@ -1,3 +1,4 @@
+/// <reference types="google.maps" />
 import type { RefCallback } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { importLibrary, setOptions } from '@googlemaps/js-api-loader';

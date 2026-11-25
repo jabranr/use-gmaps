@@ -16,7 +16,8 @@
     "setup": "bash setup-test-app.sh",
     "start": "cd test-app && ./node_modules/.bin/vite",
     "preview": "cd test-app && ./node_modules/.bin/vite build && ./node_modules/.bin/vite preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postbuild": "node -e \"for (const f of ['dist/index.d.ts','dist/index.d.cts']) { const fs = require('fs'); const ref = '/// <reference types=\\\"google.maps\\\" />\\n'; const s = fs.readFileSync(f, 'utf8'); if (!s.startsWith(ref)) fs.writeFileSync(f, ref + s); }\""
   },
   "homepage": "https://github.com/jabranr/use-gmaps#readme",
   "keywords": [
