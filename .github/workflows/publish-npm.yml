@@ -19,7 +19,5 @@ jobs:
     with:
       use-lerna: false
       run-lint: false
-      run-format-check: false
-      run-typecheck: false
     secrets:
       github-token: ${{ secrets.GITHUB_TOKEN }}

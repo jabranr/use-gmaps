@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "types": ["google.maps", "node"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "playwright/**/*.ts",
+    "*.config.ts",
+    "*.config.mts"
+  ],
+  "exclude": []
+}

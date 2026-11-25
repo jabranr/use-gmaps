@@ -1,106 +1,190 @@
-import type { Reducer, RefObject } from "react";
-import { useCallback, useEffect, useReducer, useRef } from "react";
-import type { LoaderOptions } from "@googlemaps/js-api-loader";
-import { Loader } from "@googlemaps/js-api-loader";
+/// <reference types="google.maps" />
+import type { RefCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { importLibrary, setOptions } from '@googlemaps/js-api-loader';
 
-type UseGoogleMaps = LoaderOptions & {
+/**
+ * Options for loading the Maps JavaScript API.
+ * @see https://developers.google.com/maps/documentation/javascript/load-maps-js-api#required_parameters
+ */
+export type GoogleMapsLoaderOptions = {
+  /** Your Google Maps API key. */
+  apiKey: string;
+  /** Maps JavaScript API version. Defaults to `weekly`. */
+  version?: string;
+  /** Extra libraries to load up front, e.g. `['places']`. */
+  libraries?: string[];
+  language?: string;
+  region?: string;
+  mapIds?: string[];
+  authReferrerPolicy?: string;
+  channel?: string;
+  solutionChannel?: string;
+};
+
+export type UseGoogleMapsOptions = GoogleMapsLoaderOptions & {
   /**
-   * Set default options for the map.
-   * This is the same as the `MapOptions` in the Google Maps JavaScript API.
-   * You can set options like `zoom`, `center`, `mapTypeId`, etc
+   * Options for the map. Changes after the map is created are applied with
+   * `map.setOptions()`.
    * @see https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
    */
   mapOptions?: google.maps.MapOptions;
 };
 
-type GoogleMaps = {
-  mapRef: RefObject<HTMLDivElement | null>;
-  map: google.maps.Map;
+export type UseGoogleMapsResult = {
+  /** Attach to the element that should hold the map: `<div ref={mapRef} />`. */
+  mapRef: RefCallback<HTMLDivElement>;
+  /** The map instance, or `null` until it has been created. */
+  map: google.maps.Map | null;
+  /** `true` once the map's first tiles have loaded. */
   isMapLoaded: boolean;
+  /** Any error raised while loading the API or creating the map. */
   errors: unknown | null;
+  /** Map center, updated each time the map settles after a pan or zoom. */
   currentCenter: google.maps.LatLngLiteral;
 };
 
-type GoogleMapsState = {
-  gmap: google.maps.Map;
-  isLoaded: boolean;
-  currentCenter: google.maps.LatLngLiteral;
-  errors: unknown | null;
+export const DEFAULT_CENTER: google.maps.LatLngLiteral = {
+  lat: 35.82,
+  lng: 76.5
 };
+export const DEFAULT_ZOOM = 10;
 
-function reducer(
-  state: GoogleMapsState,
-  update: Partial<GoogleMapsState>
-): GoogleMapsState {
-  return { ...state, ...update };
+let configuredOptions: string | null = null;
+
+function configureLoader({
+  apiKey,
+  version = 'weekly',
+  ...rest
+}: GoogleMapsLoaderOptions) {
+  const options = { key: apiKey, v: version, ...rest };
+  const serialized = JSON.stringify(options);
+
+  if (configuredOptions === null) {
+    setOptions(options);
+    configuredOptions = serialized;
+  } else if (configuredOptions !== serialized) {
+    console.warn(
+      '[@jabraf/use-gmaps] The Maps JavaScript API can only be loaded once per page. ' +
+        'Loader options differ from the first call and are ignored.'
+    );
+  }
 }
 
-const initialState: GoogleMapsState = {
-  gmap: {} as google.maps.Map,
-  isLoaded: false,
-  currentCenter: { lat: 35.82, lng: 76.5 },
-  errors: null,
-};
+/** @internal Test helper to reset the once-per-page loader configuration. */
+export function __resetLoaderForTests() {
+  configuredOptions = null;
+}
+
+function toLiteral(
+  center: google.maps.LatLng | google.maps.LatLngLiteral | null | undefined
+): google.maps.LatLngLiteral | null {
+  if (!center) return null;
+  if (typeof (center as google.maps.LatLng).toJSON === 'function') {
+    return (center as google.maps.LatLng).toJSON();
+  }
+  return center as google.maps.LatLngLiteral;
+}
+
+function stableKey(value: unknown): string {
+  try {
+    return JSON.stringify(value) ?? '';
+  } catch {
+    return '';
+  }
+}
 
 export default function useGoogleMaps({
-  apiKey,
   mapOptions,
-  ...options
-}: UseGoogleMaps): GoogleMaps {
-  const mapRef = useRef<HTMLDivElement | null>(null);
-  const [state, dispatch] = useReducer(
-    reducer as Reducer<GoogleMapsState, Partial<GoogleMapsState>>,
-    initialState
+  ...loaderOptions
+}: UseGoogleMapsOptions): UseGoogleMapsResult {
+  const [element, setElement] = useState<HTMLDivElement | null>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [isMapLoaded, setMapLoaded] = useState(false);
+  const [errors, setErrors] = useState<unknown | null>(null);
+  const [currentCenter, setCurrentCenter] = useState<google.maps.LatLngLiteral>(
+    () => toLiteral(mapOptions?.center) ?? DEFAULT_CENTER
   );
 
-  const setupGoogleMaps = useCallback(function setupGoogleMaps() {
-    if (typeof window !== "undefined" && mapRef.current) {
-      const gmap = new window.google.maps.Map(mapRef.current, {
-        center: state.currentCenter,
-        zoom: 10,
-        ...mapOptions,
-      });
+  // Latest options, read when the map is created without re-running the effect.
+  const latest = useRef({ mapOptions, loaderOptions });
+  latest.current = { mapOptions, loaderOptions };
 
-      window.google.maps.event.addListenerOnce(gmap, "tilesloaded", () => {
-        dispatch({ gmap, isLoaded: true });
-      });
-
-      window.google.maps.event.addListener(gmap, "center_changed", () => {
-        dispatch({
-          gmap,
-          isLoaded: true,
-          currentCenter: gmap.getCenter()?.toJSON(),
-        });
-      });
-    }
+  const mapRef = useCallback<RefCallback<HTMLDivElement>>((node) => {
+    setElement(node);
   }, []);
 
   useEffect(() => {
-    if (state.isLoaded) {
+    if (!element) return;
+
+    let cancelled = false;
+    let instance: google.maps.Map | null = null;
+    let events: typeof google.maps.event | null = null;
+
+    try {
+      configureLoader(latest.current.loaderOptions);
+    } catch (err) {
+      setErrors(err);
       return;
     }
 
-    const loader = new Loader({
-      apiKey,
-      version: "weekly",
-      ...options,
-    });
+    Promise.all([importLibrary('maps'), importLibrary('core')])
+      .then(([{ Map }, { event }]) => {
+        if (cancelled) return;
 
-    loader
-      .importLibrary("maps")
-      .then(() => {
-        setupGoogleMaps();
+        events = event;
+        const options = latest.current.mapOptions;
+        instance = new Map(element, {
+          center: DEFAULT_CENTER,
+          zoom: DEFAULT_ZOOM,
+          ...options
+        });
+        const created = instance;
+
+        event.addListenerOnce(created, 'tilesloaded', () => {
+          if (!cancelled) setMapLoaded(true);
+        });
+        event.addListener(created, 'idle', () => {
+          const center = toLiteral(created.getCenter());
+          if (!cancelled && center) setCurrentCenter(center);
+        });
+
+        setErrors(null);
+        setMap(created);
       })
-      .catch((err) => {
-        dispatch({ errors: err });
+      .catch((err: unknown) => {
+        if (!cancelled) setErrors(err);
       });
-  }, [apiKey, options, state.isLoaded]);
 
-  return {
-    mapRef,
-    map: state.gmap,
-    isMapLoaded: state.isLoaded,
-    errors: state.errors,
-    currentCenter: state.currentCenter,
-  };
+    return () => {
+      cancelled = true;
+      if (instance && events) {
+        events.clearInstanceListeners(instance);
+      }
+      setMap(null);
+      setMapLoaded(false);
+    };
+  }, [element]);
+
+  // Apply mapOptions changes to an existing map. Compared by value so an
+  // inline object literal does not reset the map on every render.
+  const mapOptionsKey = stableKey(mapOptions);
+  const appliedKey = useRef<string | null>(null);
+  useEffect(() => {
+    if (!map) {
+      appliedKey.current = null;
+      return;
+    }
+    if (appliedKey.current === null) {
+      // Options were passed to the constructor.
+      appliedKey.current = mapOptionsKey;
+      return;
+    }
+    if (appliedKey.current !== mapOptionsKey && latest.current.mapOptions) {
+      map.setOptions(latest.current.mapOptions);
+      appliedKey.current = mapOptionsKey;
+    }
+  }, [map, mapOptionsKey]);
+
+  return { mapRef, map, isMapLoaded, errors, currentCenter };
 }

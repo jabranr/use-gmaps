@@ -19,8 +19,6 @@ jobs:
     with:
       use-lerna: false
       run-lint: false
-      run-format-check: false
-      run-typecheck: false
 
   e2e:
     timeout-minutes: 60
@@ -30,9 +28,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22.17.0
-          cache: "npm"
+          cache: 'npm'
       - run: npm ci
-      - run: npm run build
       - name: Install Chromium browser
         run: npx playwright install --with-deps chromium
       - name: Run Playwright tests

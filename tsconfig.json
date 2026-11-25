@@ -16,8 +16,8 @@
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
 
-    /* If transpiling with TypeScript: */
-    "module": "NodeNext",
+    /* Bundled with tsup: */
+    "module": "Preserve",
     "outDir": "dist",
     "rootDir": "src",
     "sourceMap": true,
@@ -33,8 +33,9 @@
 
     /* Other options */
     /* if lib has DOM access */
-    "lib": ["es2022", "dom", "dom.iterable"]
+    "lib": ["es2022", "dom", "dom.iterable"],
+    "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.spec.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx"]
 }

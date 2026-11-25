@@ -20,12 +20,9 @@ This custom hook uses `@googlemaps/js-api-loader` to set up the map. More info a
 
 ## Usage
 
-> Get Google Maps API key - More info https://developers.google.com/maps/documentation/javascript/get-api-key
+> Get a Google Maps API key: https://developers.google.com/maps/documentation/javascript/get-api-key
 
-Use the custom hook in your React app:
-
-```js
-import React from 'react';
+```tsx
 import useGoogleMaps from '@jabraf/use-gmaps';
 
 export default function App() {
@@ -35,116 +32,116 @@ export default function App() {
 }
 ```
 
-> You can also pass the key from environment variables, e.g. `import.meta.env.VITE_GMAPS_API_KEY` with Vite or `process.env.REACT_APP_GMAPS_API_KEY` with Create React App (CRA).
+> You can also pass the key from environment variables, e.g. `import.meta.env.VITE_GMAPS_API_KEY` with Vite.
 
-Another example to add a marker:
+Add a marker once the map exists:
 
-```js
-import React from 'react';
+```tsx
+import { useEffect } from 'react';
 import useGoogleMaps from '@jabraf/use-gmaps';
 
-const { mapRef, map, isMapLoaded, currentCenter } = useGoogleMaps({
-  apiKey: 'ABC-XYZ'
-});
-
 export default function App() {
-  React.useEffect(() => {
-    if (isMapLoaded) {
-      // Just use native Google Maps API methods
-      new window.google.maps.Marker({
+  const { mapRef, map, currentCenter } = useGoogleMaps({
+    apiKey: 'ABC-XYZ',
+    mapOptions: { mapId: 'DEMO_MAP_ID' } // Advanced markers need a map ID
+  });
+
+  useEffect(() => {
+    if (!map) return;
+
+    let marker: google.maps.marker.AdvancedMarkerElement | undefined;
+    google.maps.importLibrary('marker').then(({ AdvancedMarkerElement }) => {
+      marker = new AdvancedMarkerElement({
         map,
         position: currentCenter,
         title: 'I am a marker'
       });
-    }
-  }, [isMapLoaded, map]);
+    });
+
+    return () => {
+      if (marker) marker.map = null;
+    };
+  }, [map]);
 
   return <div ref={mapRef} style={{ width: '100vw', height: '100vh' }} />;
 }
 ```
 
-## API
+The Maps JavaScript API can only be loaded once per page, so the loader options (everything except `mapOptions`) from the first hook call win. Later calls with different loader options log a warning and reuse the loaded API.
 
-Here are other options that can be passed to the custom hook:
+## Options
 
-### `libraries`
+### `apiKey` (required)
 
-Load additional libraries by specifying a `libraries` option.
-
-```js
-...
-const { map } = useGoogleMaps({
-  libraries: ['places']
-});
-```
-
-More information at https://developers.google.com/maps/documentation/javascript/libraries
+Your Google Maps API key.
 
 ### `version`
 
-Set a version for Google Maps API. Default to `weekly`
+Maps JavaScript API version. Defaults to `weekly`. See https://developers.google.com/maps/documentation/javascript/versions
 
-```js
-...
-const { map } = useGoogleMaps({
-  version: 'weekly'
-});
-```
+### `libraries`
 
-More information at https://developers.google.com/maps/documentation/javascript/versions
+Extra libraries to load up front, e.g. `['places']`. You can also load them on demand with `google.maps.importLibrary()`. See https://developers.google.com/maps/documentation/javascript/libraries
+
+### `language`, `region`, `mapIds`, `authReferrerPolicy`, `channel`, `solutionChannel`
+
+Passed to the loader. See https://developers.google.com/maps/documentation/javascript/load-maps-js-api#required_parameters
 
 ### `mapOptions`
 
-Set and override default options for the Map
+Options for the map, such as `center`, `zoom` and `mapId`. Defaults are `zoom: 10` and a center of `{ lat: 35.82, lng: 76.5 }`.
 
-```js
-...
-const { map } = useGoogleMaps({
-  mapOptions: {
-    center: { lat:123,lng:456 },
-    zoom: 18,
-    styles: [{ ... }]
-    ...
-  }
-});
-```
+Changes after the map is created are applied with `map.setOptions()`. Options are compared by value, so passing a new inline object each render is fine.
 
-More information at https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
+See https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions
 
----
-
-This custom hook API provides access to followings:
+## Return value
 
 ### `mapRef`
 
-The [React ref reference](https://reactjs.org/docs/hooks-reference.html#useref) that can be attached to any HTML element in the React app.
+A [callback ref](https://react.dev/reference/react-dom/components/common#ref-callback) to attach to the element that should hold the map. The element can mount later (e.g. behind a condition); the map is created when it appears and torn down when it is removed.
 
 ### `map`
 
-The native [Google Maps Map](https://developers.google.com/maps/documentation/javascript/reference/map) object for currently loaded map.
+The native [`google.maps.Map`](https://developers.google.com/maps/documentation/javascript/reference/map) instance, or `null` until it is created.
 
 ### `isMapLoaded`
 
-`true` or `false` providing current state of loading map.
+`true` once the map's first tiles have loaded.
 
 ### `errors`
 
-Any errors from `@googlemaps/js-api-loader` while loading the map.
+Any error raised while loading the API or creating the map, otherwise `null`.
 
 ### `currentCenter`
 
-Current [location object](https://developers.google.com/maps/documentation/javascript/reference/coordinates#LatLng) e.g. `{ lat: 123, lng: 456 }`
+The current center as `{ lat, lng }`. It starts at `mapOptions.center` (or the default) and updates each time the map settles after a pan or zoom.
 
-The value will update with map drag.
+## Migrating from v2
+
+- `map` is `null` until the map is created (it used to be an empty object typed as a map). Check `if (map)` before using it.
+- `mapRef` is a callback ref. `<div ref={mapRef} />` still works, but `mapRef.current` no longer exists.
+- `currentCenter` updates when the map settles (`idle`) rather than on every frame of a drag.
+- Loader options follow `@googlemaps/js-api-loader` v2. `id`, `nonce`, `retries`, `url` and `client` are no longer supported.
+- `@types/google.maps` is now installed with the package, so the `google.maps` types are available without installing them yourself.
 
 ## Development
 
-Run the following commands to set up and start the test project, a Vite + React app that installs the locally built package.
+Run the following commands to set up and start the test project, a Vite + React app that installs the locally built package. Set `VITE_GMAPS_API_KEY` to see a real map.
 
 ```sh
 npm install
 npm run setup
 npm start
+```
+
+Checks:
+
+```sh
+npm test            # unit tests
+npm run typecheck
+npm run format:check
+npm run test:e2e    # builds the test app and runs Playwright against it
 ```
 
 ## Releasing
